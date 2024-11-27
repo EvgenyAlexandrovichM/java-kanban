@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 public class TaskManager {
     private HashMap<Integer, Task> tasks = new HashMap<>();
@@ -36,7 +35,6 @@ public class TaskManager {
         if (!tasks.containsKey(taskId)) {
             return;
         }
-        tasks.remove(task.getId());
         tasks.put(task.getId(), task);
 
     }
@@ -47,11 +45,9 @@ public class TaskManager {
         if (!epics.containsKey(epicId)) {
             return;
         }
-        Epic epicToRemove = epics.get(epicId);
-        epics.remove(epicToRemove.getId());
-        epics.put(epic.getId(), epic);
-        updateEpicStatus(epic);
-
+        Epic updatedEpic = epics.get(epicId);
+        updatedEpic.setName(epic.getName());
+        updatedEpic.setDescription(epic.getDescription());
     }
 
     public void updateSubtask(Subtask subtask) {
@@ -61,11 +57,11 @@ public class TaskManager {
         }
         Subtask subtaskToRemove = subtasks.get(subtaskId);
         int epicId = subtaskToRemove.getEpicId();
-        subtasks.remove(subtaskToRemove.getId());
-        subtasks.put(subtask.getId(), subtask);
-        Epic epic = epics.get(epicId);
-        updateEpicStatus(epic);
-
+        if(epicId == subtask.getEpicId()) {
+            subtasks.put(subtask.getId(), subtask);
+            Epic epic = epics.get(epicId);
+            updateEpicStatus(epic);
+        }
     }
 
     public Task getTasksById(int taskId) {
@@ -93,10 +89,16 @@ public class TaskManager {
     }
 
     public void removeTaskById(int taskId) {
+        if (!tasks.containsKey(taskId)) {
+            return;
+        }
         tasks.remove(taskId);
     }
 
     public void removeEpicById(int epicId) {
+        if (!epics.containsKey(epicId)) {
+            return;
+        }
         ArrayList<Integer> epicSubtasks = epics.get(epicId).getSubtasksId();
         for (Integer id : epicSubtasks) {
             subtasks.remove(id);
@@ -105,14 +107,21 @@ public class TaskManager {
     }
 
     public void removeSubtaskById(int subtaskId) {
-        subtasks.remove(subtaskId);
         Subtask subtask = subtasks.get(subtaskId);
-        int epicId = subtask.getEpicId();
-        Epic epic = epics.get(epicId);
-        ArrayList<Integer> id = epic.getSubtasksId();
-        id.remove(subtaskId);
-        epic.setSubtasksId(id);
-        updateEpicStatus(epic);
+        if (subtask != null) {
+            int epicId = subtask.getEpicId();
+            if (epicId != -1) {
+                Epic epic = epics.get(epicId);
+                if (epic != null) {
+                    ArrayList<Integer> id = epic.getSubtasksId();
+                    if (id != null) {
+                        id.remove(Integer.valueOf(subtaskId));
+                        updateEpicStatus(epic);
+                    }
+                }
+            }
+            subtasks.remove(subtaskId);
+        }
     }
 
     public void removeAllTasks() {
@@ -128,7 +137,7 @@ public class TaskManager {
     public void removeAllSubtasks() {
         for (Epic epic : epics.values()) {
             epic.clearSubtasksId();
-            epic.setStatus(Status.NEW);
+            updateEpicStatus(epic);
         }
         subtasks.clear();
     }
