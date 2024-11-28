@@ -115,7 +115,7 @@ public class TaskManager {
                 if (epic != null) {
                     ArrayList<Integer> id = epic.getSubtasksId();
                     if (id != null) {
-                        id.remove(Integer.valueOf(subtaskId));
+                        epic.removeSubtaskById(subtaskId);
                         updateEpicStatus(epic);
                     }
                 }
