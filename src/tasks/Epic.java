@@ -1,3 +1,7 @@
+package tasks;
+
+import statuses.Status;
+
 import java.util.ArrayList;
 
 public class Epic extends Task {
@@ -31,5 +35,4 @@ public class Epic extends Task {
     public void removeSubtaskById(int id) {
         subtasksId.remove(Integer.valueOf(id));
     }
-
 }

@@ -1,4 +1,6 @@
+package tasks;
 
+import statuses.Status;
 
 public class Subtask extends Task {
     private int epicId;

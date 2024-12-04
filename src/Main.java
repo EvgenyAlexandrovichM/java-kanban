@@ -1,3 +1,11 @@
+import managers.Managers;
+import statuses.Status;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
+import tasks.Epic;
+import managers.TaskManager;
+
 public class Main {
     private static TaskManager taskManager = Managers.getDefault();
 
@@ -63,7 +71,6 @@ public class Main {
         System.out.println(taskManager.getEpics());
         System.out.println(taskManager.getSubtasks());
         taskManager.removeSubtaskById(doHomeWork1.getId());
-        System.out.println();
         System.out.println(taskManager.getSubtasks());
         System.out.println("-".repeat(50));
         System.out.println(taskManager.getSubtasksForEpic(doHomeWork.getId()));

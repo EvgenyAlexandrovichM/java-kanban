@@ -1,10 +1,13 @@
+package taskstests;
+
+import statuses.Status;
+import tasks.Task;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TaskTest {
 
-    // добавлены переопределенные методы equals() и hashCode()
     @Test
     void shouldReturnTrueIfIdsAreEquals() {
         Task task1 = new Task("Убраться в комнате", "Протереть пыль, пропылесосить ковер, сделать +" +

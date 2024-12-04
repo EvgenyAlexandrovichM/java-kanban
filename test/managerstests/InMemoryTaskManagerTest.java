@@ -1,7 +1,15 @@
+package managerstests;
+
+import managers.Managers;
+import statuses.Status;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
+import managers.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,7 +43,7 @@ class InMemoryTaskManagerTest {
     void shouldGetAllTasks() {
         taskManager.addTask(task1);
         taskManager.addTask(task2);
-        ArrayList<Task> tasks = taskManager.getTasks();
+        List<Task> tasks = taskManager.getTasks();
         assertNotNull(tasks);
         assertEquals(2, tasks.size());
         assertTrue(tasks.contains(task1));
@@ -48,7 +56,7 @@ class InMemoryTaskManagerTest {
         Task updateTask1 = new Task("Не забыть убраться в комнате", "Можно без влажной уборки",
                 task1.getId(), Status.IN_PROGRESS);
         taskManager.updateTask(updateTask1);
-        ArrayList<Task> tasks = taskManager.getTasks();
+        List<Task> tasks = taskManager.getTasks();
         assertNotNull(tasks);
         assertEquals(1, tasks.size());
         assertEquals("Не забыть убраться в комнате", tasks.getFirst().getName());
@@ -60,7 +68,7 @@ class InMemoryTaskManagerTest {
         taskManager.addTask(task1);
         taskManager.addTask(task2);
         taskManager.removeAllTasks();
-        ArrayList<Task> tasks = taskManager.getTasks();
+        List<Task> tasks = taskManager.getTasks();
         assertTrue(tasks.isEmpty());
     }
 
@@ -69,7 +77,7 @@ class InMemoryTaskManagerTest {
         taskManager.addTask(task1);
         taskManager.addTask(task2);
         taskManager.removeTaskById(task1.getId());
-        ArrayList<Task> tasks = taskManager.getTasks();
+        List<Task> tasks = taskManager.getTasks();
         assertFalse(tasks.contains(task1));
         assertTrue(tasks.contains(task2));
     }
@@ -88,7 +96,7 @@ class InMemoryTaskManagerTest {
     void shouldGetAllEpics() {
         taskManager.addEpic(epic1);
         taskManager.addEpic(epic2);
-        ArrayList<Epic> epics = taskManager.getEpics();
+        List<Epic> epics = taskManager.getEpics();
         assertNotNull(epics);
         assertEquals(2, epics.size());
         assertTrue(epics.contains(epic1));
@@ -101,7 +109,7 @@ class InMemoryTaskManagerTest {
         Epic updateEpic1 = new Epic("Съездить в отпуск в июне", "В приоритете в Германию, попить нормального пива",
                 epic1.getId());
         taskManager.updateEpic(updateEpic1);
-        ArrayList<Epic> epics = taskManager.getEpics();
+        List<Epic> epics = taskManager.getEpics();
         assertNotNull(epics);
         assertEquals(1, epics.size());
         assertEquals("Съездить в отпуск в июне", epics.getFirst().getName());
@@ -119,8 +127,8 @@ class InMemoryTaskManagerTest {
         taskManager.addSubtask(subtask1);
         taskManager.addSubtask(subtask2);
         taskManager.removeAllEpics();
-        ArrayList<Epic> epics = taskManager.getEpics();
-        ArrayList<Subtask> subtasks = taskManager.getSubtasks();
+        List<Epic> epics = taskManager.getEpics();
+        List<Subtask> subtasks = taskManager.getSubtasks();
         assertTrue(epics.isEmpty());
         assertTrue(subtasks.isEmpty());
     }
@@ -136,8 +144,8 @@ class InMemoryTaskManagerTest {
         taskManager.addSubtask(subtask1);
         taskManager.addSubtask(subtask2);
         taskManager.removeEpicById(epic1.getId());
-        ArrayList<Epic> epics = taskManager.getEpics();
-        ArrayList<Subtask> subtasks = taskManager.getSubtasks();
+        List<Epic> epics = taskManager.getEpics();
+        List<Subtask> subtasks = taskManager.getSubtasks();
         assertFalse(epics.contains(epic1));
         assertTrue(subtasks.isEmpty());
     }
@@ -162,7 +170,7 @@ class InMemoryTaskManagerTest {
                 Status.NEW, epic1.getId());
         taskManager.addSubtask(subtask1);
         taskManager.addSubtask(subtask2);
-        ArrayList<Subtask> subtasks = taskManager.getSubtasks();
+        List<Subtask> subtasks = taskManager.getSubtasks();
         assertNotNull(subtasks);
         assertEquals(2, subtasks.size());
         assertTrue(subtasks.contains(subtask1));
@@ -182,7 +190,7 @@ class InMemoryTaskManagerTest {
         Subtask subtask3 = new Subtask("Погладить рубашку", "Желательно черную", subtask2.getId(),
                 Status.DONE, epic1.getId());
         taskManager.updateSubtask(subtask3);
-        ArrayList<Subtask> subtasks = taskManager.getSubtasks();
+        List<Subtask> subtasks = taskManager.getSubtasks();
         Status actualEpicStatus = epic1.getStatus();
         assertNotNull(subtasks);
         assertEquals(2, subtasks.size());
@@ -202,7 +210,7 @@ class InMemoryTaskManagerTest {
         taskManager.addSubtask(subtask2);
         Status epic1Status = epic1.getStatus();
         taskManager.removeSubtaskById(subtask1.getId());
-        ArrayList<Subtask> subtasks = taskManager.getSubtasks();
+        List<Subtask> subtasks = taskManager.getSubtasks();
         Status actualEpicStatus = epic1.getStatus();
         assertNotNull(subtasks);
         assertEquals(1, subtasks.size());

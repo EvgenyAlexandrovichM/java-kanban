@@ -1,4 +1,9 @@
+package managerstests;
+
+import managers.Managers;
 import org.junit.jupiter.api.Test;
+import managers.TaskManager;
+import managers.InMemoryHistoryManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 

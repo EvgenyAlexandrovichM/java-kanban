@@ -1,3 +1,7 @@
+package managers;
+
+import tasks.Task;
+
 import java.util.ArrayList;
 
 public class InMemoryHistoryManager implements HistoryManager {
@@ -14,6 +18,6 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public ArrayList<Task> getHistory() {
-        return historyList;
+        return new ArrayList<>(historyList);
     }
 }
