@@ -23,8 +23,9 @@ class EpicTest {
     // была реализована невозможность добавления эпика в список айди сабтасков
     @Test
     void shouldReturnFalseWhenAddingEpicAsSubtaskToItself() {
+        epic1.addSubtask(epic1.getId());
         int subtasksSize = epic1.getSubtasksId().size();
-        epic1.addSubtask(3);
-        assertEquals(subtasksSize, epic1.getSubtasksId().size());
+
+        assertEquals(subtasksSize, 0);
     }
 }
