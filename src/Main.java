@@ -82,6 +82,17 @@ public class Main {
         System.out.println(taskManager.getEpicsById(doHomeWork1.getEpicId()));
         System.out.println("-".repeat(50));
         System.out.println(taskManager.getHistory());
-
+        System.out.println("-".repeat(50));
+        System.out.println(taskManager.getTasksById(task1.getId()));
+        System.out.println(taskManager.getSubtasksById(doHomeWork2.getId()));
+        System.out.println(taskManager.getEpicsById(doHomeWork1.getEpicId()));
+        System.out.println("-".repeat(50));
+        System.out.println(taskManager.getHistory());
+        System.out.println("-".repeat(50));
+        System.out.println(taskManager.getTasksById(task1.getId()));
+        System.out.println("-".repeat(50));
+        System.out.println(taskManager.getHistory());
+        taskManager.removeTaskById(task1.getId());
+        System.out.println(taskManager.getHistory());
     }
 }
