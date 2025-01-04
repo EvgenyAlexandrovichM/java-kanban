@@ -1,11 +1,10 @@
 package managerstests;
 
-import managers.Managers;
+import managers.*;
 import statuses.Status;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
-import managers.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +27,6 @@ class InMemoryTaskManagerTest {
         task2 = new Task("Сходить в спортзал", "Сегодня день ног и спины", Status.NEW);
         epic1 = new Epic("Сделать дипломную работу", "Нужно успеть за месяц");
         epic2 = new Epic("Сделать тз", "Сегодня крайний день");
-
     }
 
     @Test
@@ -64,22 +62,31 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void shouldRemoveAllTasks() {
+    void shouldRemoveAllTasksAndRemoveFromHistory() {
         taskManager.addTask(task1);
         taskManager.addTask(task2);
+        taskManager.getTasksById(task1.getId());
+        taskManager.getTasksById(task2.getId());
         taskManager.removeAllTasks();
         List<Task> tasks = taskManager.getTasks();
+        List<Task> historyTasks = taskManager.getHistory();
         assertTrue(tasks.isEmpty());
+        assertTrue(historyTasks.isEmpty());
     }
 
     @Test
-    void shouldRemoveTaskById() {
+    void shouldRemoveTaskByIdAndRemoveFromHistory() {
         taskManager.addTask(task1);
         taskManager.addTask(task2);
+        taskManager.getTasksById(1);
+        taskManager.getTasksById(2);
         taskManager.removeTaskById(task1.getId());
         List<Task> tasks = taskManager.getTasks();
+        List<Task> historyTasks = taskManager.getHistory();
         assertFalse(tasks.contains(task1));
         assertTrue(tasks.contains(task2));
+        assertFalse(historyTasks.contains(task1));
+        assertTrue(historyTasks.contains(task2));
     }
 
     @Test
@@ -117,7 +124,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void shouldRemoveAllEpicsAlsoShouldRemoveAllSubtasks() {
+    void shouldRemoveAllEpicsAlsoShouldRemoveAllSubtasksAndRemoveFromHistory() {
         taskManager.addEpic(epic1);
         taskManager.addEpic(epic2);
         Subtask subtask1 = new Subtask("Сделать презентацию", "12 слайдов", epic1.getId(),
@@ -126,15 +133,21 @@ class InMemoryTaskManagerTest {
                 Status.NEW, epic1.getId());
         taskManager.addSubtask(subtask1);
         taskManager.addSubtask(subtask2);
+        taskManager.getEpicsById(epic1.getId());
+        taskManager.getSubtasksById(subtask1.getId());
         taskManager.removeAllEpics();
         List<Epic> epics = taskManager.getEpics();
         List<Subtask> subtasks = taskManager.getSubtasks();
+        List<Task> historyEpics = taskManager.getHistory();
+        List<Task> historySubtasks = taskManager.getHistory();
         assertTrue(epics.isEmpty());
         assertTrue(subtasks.isEmpty());
+        assertTrue(historyEpics.isEmpty());
+        assertTrue(historySubtasks.isEmpty());
     }
 
     @Test
-    void shouldRemoveEpicByIdAlsoShouldRemoveAllSubtasks() {
+    void shouldRemoveEpicByIdAlsoShouldRemoveAllSubtasksAndRemoveFromHistory() {
         taskManager.addEpic(epic1);
         taskManager.addEpic(epic2);
         Subtask subtask1 = new Subtask("Сделать презентацию", "12 слайдов", epic1.getId(),
@@ -143,11 +156,18 @@ class InMemoryTaskManagerTest {
                 Status.NEW, epic1.getId());
         taskManager.addSubtask(subtask1);
         taskManager.addSubtask(subtask2);
+        taskManager.getEpicsById(epic1.getId());
+        taskManager.getSubtasksById(subtask1.getId());
+        taskManager.getSubtasksById(subtask2.getId());
         taskManager.removeEpicById(epic1.getId());
         List<Epic> epics = taskManager.getEpics();
         List<Subtask> subtasks = taskManager.getSubtasks();
+        List<Task> historyEpics = taskManager.getHistory();
+        List<Task> historySubtasks = taskManager.getHistory();
         assertFalse(epics.contains(epic1));
         assertTrue(subtasks.isEmpty());
+        assertTrue(historyEpics.isEmpty());
+        assertTrue(historySubtasks.isEmpty());
     }
 
     @Test
@@ -200,7 +220,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void shouldRemoveSubtaskByIdAlsoShouldChangeEpicStatus() {
+    void shouldRemoveSubtaskByIdAlsoShouldChangeEpicStatusAlsoRemoveSubtaskFromHistory() {
         taskManager.addEpic(epic1);
         Subtask subtask1 = new Subtask("Сделать презентацию", "12 слайдов", epic1.getId(),
                 Status.NEW, epic1.getId());
@@ -208,14 +228,17 @@ class InMemoryTaskManagerTest {
                 Status.DONE, epic1.getId());
         taskManager.addSubtask(subtask1);
         taskManager.addSubtask(subtask2);
+        taskManager.getSubtasksById(subtask1.getId());
         Status epic1Status = epic1.getStatus();
         taskManager.removeSubtaskById(subtask1.getId());
         List<Subtask> subtasks = taskManager.getSubtasks();
         Status actualEpicStatus = epic1.getStatus();
+        List<Task> historySubtask = taskManager.getHistory();
         assertNotNull(subtasks);
         assertEquals(1, subtasks.size());
         assertTrue(subtasks.contains(subtask2));
         assertNotEquals(epic1Status, actualEpicStatus);
+        assertTrue(historySubtask.isEmpty());
 
     }
 }
