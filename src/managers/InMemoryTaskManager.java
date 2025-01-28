@@ -1,6 +1,7 @@
 package managers;
 
 import statuses.Status;
+import statuses.TaskType;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
@@ -243,5 +244,23 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             epic.setStatus(Status.IN_PROGRESS);
         }
+    }
+
+    protected void loadTask(Task task) {
+        if (task.getType().equals(TaskType.TASK)) {
+            tasks.put(task.getId(), task);
+        } else if (task.getType().equals(TaskType.EPIC)) {
+            Epic epic = (Epic) task;
+            epics.put(epic.getId(), epic);
+        } else if (task.getType().equals(TaskType.SUBTASK)) {
+            Subtask subtask = (Subtask) task;
+            subtasks.put(subtask.getId(), subtask);
+            Epic epic = epics.get(subtask.getEpicId());
+            epic.addSubtask(subtask.getId());
+        }
+    }
+
+    public void setNextId(int nextId) {
+        this.nextId = nextId;
     }
 }

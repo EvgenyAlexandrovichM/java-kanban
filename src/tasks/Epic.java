@@ -18,11 +18,6 @@ public class Epic extends Task {
         super(name, description, id, Status.NEW);
     }
 
-    public Epic(String name, String description, int id, Status status, TaskType type) {
-        super(name, description, id, status, type);
-        this.subtasksId = subtasksId;
-    }
-
     public void addSubtask(int subtaskId) {
         if (subtaskId != this.getId()) {
             subtasksId.add(subtaskId);
@@ -39,6 +34,11 @@ public class Epic extends Task {
 
     public void removeSubtaskById(int id) {
         subtasksId.remove(Integer.valueOf(id));
+    }
+
+    @Override
+    public TaskType getType() {
+        return TaskType.EPIC;
     }
 
     @Override

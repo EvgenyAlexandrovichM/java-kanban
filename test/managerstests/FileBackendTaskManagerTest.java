@@ -9,6 +9,7 @@ import tasks.Task;
 
 import java.io.File;
 import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FileBackendTaskManagerTest {
@@ -38,7 +39,7 @@ public class FileBackendTaskManagerTest {
         fileBackendTaskManager.addEpic(epic2);
         assertTrue(file.exists(), "Файл не создан");
         assertTrue(file.length() > 0, "Файл пустой");
-        /* FileBackendTaskManager loadedTaskManager = FileBackendTaskManager.loadFromFile(file);
+       /*  FileBackendTaskManager loadedTaskManager = FileBackendTaskManager.loadFromFile(file);
         assertEquals(fileBackendTaskManager.getTasks().size(), loadedTaskManager.getTasks().size());
         assertEquals(fileBackendTaskManager.getEpics().size(), loadedTaskManager.getEpics().size());
         assertEquals(fileBackendTaskManager.getTasksById(1).toString(),
@@ -50,6 +51,5 @@ public class FileBackendTaskManagerTest {
         assertEquals(fileBackendTaskManager.getEpicsById(4).toString(),
                 loadedTaskManager.getTasksById(4).toString());
         Files.delete(Paths.get(file.getAbsolutePath())); */ //TODO: Доделать тесты, тесты падают, решения почему нет, возможно, проблема в логике метода загрузки из данных из файла)
-
     }
 }
