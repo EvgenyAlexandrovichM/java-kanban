@@ -8,7 +8,6 @@ import tasks.Subtask;
 import tasks.Task;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +49,7 @@ public class FileBackendTaskManager extends InMemoryTaskManager {
             return new Task(name, description, id, status, type);
 
         } else if (type.equals(TaskType.EPIC)) {
-            Epic epic = new Epic(name, description, id,status,type);
+            Epic epic = new Epic(name, description, id, status, type);
             epic.setStatus(status);
             return epic;
         } else {
@@ -187,5 +186,4 @@ public class FileBackendTaskManager extends InMemoryTaskManager {
     public List<Subtask> getSubtasksForEpic(int epicId) {
         return super.getSubtasksForEpic(epicId);
     }
-
 }

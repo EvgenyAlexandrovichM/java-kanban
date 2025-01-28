@@ -9,10 +9,6 @@ import tasks.Task;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FileBackendTaskManagerTest {
@@ -22,7 +18,7 @@ public class FileBackendTaskManagerTest {
     private Epic epic2;
     private File file;
 
-   @BeforeEach
+    @BeforeEach
     void setUp() throws IOException {
         task1 = new Task("Убраться в комнате", "Протереть пыль, пропылесосить ковер, сделать " +
                 "влажную уборку", 1, Status.NEW);
@@ -33,7 +29,7 @@ public class FileBackendTaskManagerTest {
     }
 
     @Test
-    void shouldSaveAndLoadFile() throws IOException {
+    void shouldSaveAndLoadFile() {
 
         FileBackendTaskManager fileBackendTaskManager = new FileBackendTaskManager(file);
         fileBackendTaskManager.addTask(task1);
