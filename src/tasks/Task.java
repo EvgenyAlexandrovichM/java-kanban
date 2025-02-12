@@ -1,6 +1,7 @@
 package tasks;
 
 import statuses.Status;
+import statuses.TaskType;
 
 import java.util.Objects;
 
@@ -10,16 +11,17 @@ public class Task {
     private int id;
     private Status status;
 
-    public Task(String name, String description, Status status) {
-        this.name = name;
-        this.description = description;
-        this.status = status;
-    }
 
     public Task(String name, String description, int id, Status status) {
         this.name = name;
         this.description = description;
         this.id = id;
+        this.status = status;
+    }
+
+    public Task(String name, String description, Status status) {
+        this.name = name;
+        this.description = description;
         this.status = status;
     }
 
@@ -55,14 +57,13 @@ public class Task {
         this.description = description;
     }
 
+    public TaskType getType() {
+        return TaskType.TASK;
+    }
+
     @Override
     public String toString() {
-        return "Tasks.Task{" +
-                "Name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", status='" + status + '\'' +
-                '}';
+        return id + "," + getType() + "," + name + "," + status + "," + description + ",";
     }
 
     @Override

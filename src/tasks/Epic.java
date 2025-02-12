@@ -1,6 +1,7 @@
 package tasks;
 
 import statuses.Status;
+import statuses.TaskType;
 
 import java.util.ArrayList;
 
@@ -20,7 +21,6 @@ public class Epic extends Task {
     public void addSubtask(int subtaskId) {
         if (subtaskId != this.getId()) {
             subtasksId.add(subtaskId);
-
         }
     }
 
@@ -34,5 +34,15 @@ public class Epic extends Task {
 
     public void removeSubtaskById(int id) {
         subtasksId.remove(Integer.valueOf(id));
+    }
+
+    @Override
+    public TaskType getType() {
+        return TaskType.EPIC;
+    }
+
+    @Override
+    public String toString() {
+        return getId() + "," + getType() + "," + getName() + "," + getStatus() + "," + getDescription() + ",";
     }
 }
