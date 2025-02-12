@@ -22,7 +22,6 @@ public class Epic extends Task {
 
     public Epic(String name, String description, Status status, LocalDateTime startTime, Duration duration) {
         super(name, description, status, startTime, duration);
-        this.endtime = super.getEndTime();
     }
 
     public Epic(String name, String description, int id, Status status, LocalDateTime startTime, Duration duration) {
@@ -60,5 +59,4 @@ public class Epic extends Task {
     public TaskType getType() {
         return TaskType.EPIC;
     }
-
 }

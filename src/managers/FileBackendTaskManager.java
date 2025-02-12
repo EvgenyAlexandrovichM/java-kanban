@@ -41,13 +41,19 @@ public class FileBackendTaskManager extends InMemoryTaskManager {
     }
 
     private static String toString(Task task) {
+        String startTimeString;
+        if (task.getStartTime() != null) {
+            startTimeString = task.getStartTime().toString();
+        } else {
+            startTimeString = "null";
+        }
         String[] toJoin = {
                 Integer.toString(task.getId()),
                 task.getType().toString(),
                 task.getName(),
                 task.getStatus().toString(),
                 task.getDescription(),
-                task.getStartTime().toString(),
+                startTimeString,
                 task.getDuration().toString()
         };
         return String.join(",", toJoin);
@@ -62,7 +68,7 @@ public class FileBackendTaskManager extends InMemoryTaskManager {
             Status status = Status.valueOf(parts[3]);
             String description = parts[4];
             LocalDateTime startTime = null;
-            if (!parts[5].equals("null")) { // Проверяем, что дата не "null"
+            if (!parts[5].equals("null")) {
                 try {
                     startTime = LocalDateTime.parse(parts[5]);
                 } catch (java.time.format.DateTimeParseException e) {

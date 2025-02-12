@@ -98,6 +98,9 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
+        if (startTime == null) {
+            return null; //TODO реализовать через Optional, чтобы не возвращать null, а то моветон какой-то )
+        }
         return startTime.plus(duration);
     }
 

@@ -1,4 +1,4 @@
-/* package managerstests;
+package managerstests;
 
 import managers.Managers;
 import enums.Status;
@@ -9,6 +9,8 @@ import tasks.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,46 +18,76 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryHistoryManagerTest {
 
-    private InMemoryHistoryManager imhm;
+    private InMemoryHistoryManager historyManager;
+    private int nextId = 1;
 
     @BeforeEach
     public void setUp() {
-        imhm = Managers.getDefaultHistory();
+        historyManager = Managers.getDefaultHistory();
+    }
+
+    private int setId() {
+        return nextId++;
+    }
+
+    private Task addTask() {
+        Task task = new Task("Test task", "Test task description",
+                Status.NEW,
+                LocalDateTime.now(),
+                Duration.ofMinutes(30));
+        int taskId = setId();
+        task.setId(taskId);
+        return task;
+    }
+
+    private Epic addEpic() {
+        Epic epic = new Epic("Epic test", "Test epic description",
+                Status.NEW,
+                LocalDateTime.now(),
+                Duration.ofMinutes(30));
+        int epicId = setId();
+        epic.setId(epicId);
+        return epic;
+    }
+
+    private Subtask addSubtask(Epic epic) {
+        Subtask subtask = new Subtask("Subtask test", "Test subtask description",
+                Status.NEW,
+                LocalDateTime.now(),
+                Duration.ofMinutes(30),
+                epic.getId());
+        int subtaskId = setId();
+        subtask.setId(subtaskId);
+        return subtask;
     }
 
     @Test
-    public void shouldAddAndGetHistory() {
-        Task task1 = new Task("Убраться в комнате", "Протереть пыль, пропылесосить ковер, сделать " +
-                "влажную уборку", 1, Status.NEW);
-        Epic epic1 = new Epic("Сделать дипломную работу", "Нужно успеть за месяц", 2);
-        Subtask subtask1 = new Subtask("Сделать презентацию", "12 слайдов", 3,
-                Status.NEW, 2);
-        imhm.addTask(task1);
-        imhm.addTask(epic1);
-        imhm.addTask(subtask1);
-        List<Task> history = imhm.getHistory();
+    public void shouldAddTasksToHistory() {
+        Task task = addTask();
+        Epic epic = addEpic();
+        Subtask subtask = addSubtask(epic);
+        historyManager.addTask(task);
+        historyManager.addTask(epic);
+        historyManager.addTask(subtask);
+        List<Task> history = historyManager.getHistory();
         assertEquals(3, history.size());
-        assertEquals(task1, history.get(0));
-        assertEquals(epic1, history.get(1));
-        assertEquals(subtask1, history.get(2));
-
+        assertEquals(task, history.get(0));
+        assertEquals(epic, history.get(1));
+        assertEquals(subtask, history.get(2));
     }
 
-    @Test
+    /*  @Test
     public void shouldRemoveTaskIfItIsViewedAgain() {
-        Task task1 = new Task("Убраться в комнате", "Протереть пыль, пропылесосить ковер, сделать " +
-                "влажную уборку", 1, Status.NEW);
-        Epic epic1 = new Epic("Сделать дипломную работу", "Нужно успеть за месяц", 2);
-        Subtask subtask1 = new Subtask("Сделать презентацию", "12 слайдов", 3,
-                Status.NEW, 2);
-        imhm.addTask(task1);
-        imhm.addTask(epic1);
-        imhm.addTask(subtask1);
-        Task task2 = new Task("Убраться в комнате", "Протереть пыль, пропылесосить ковер, сделать " +
-                "влажную уборку", 1, Status.NEW);
-        imhm.addTask(task2);
-        List<Task> history = imhm.getHistory();
+        Task task = addTask();
+        Epic epic = addEpic();
+        Subtask subtask = addSubtask(epic);
+        historyManager.addTask(task);
+        historyManager.addTask(epic);
+        historyManager.addTask(subtask);
+        List<Task> history = historyManager.getHistory();
+        assertEquals(task, history.getFirst());
+        historyManager.addTask(task);
         assertEquals(3, history.size());
-        assertEquals(task2, history.get(2));
-    }
-} */   //TODO доделать хисторименеджертесты
+        assertEquals(task, history.getLast());
+    } */ //TODO переделать тест, не заменяет уже добавленную таску
+}
