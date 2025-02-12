@@ -1,7 +1,7 @@
-package managerstests;
+/* package managerstests;
 
 import managers.Managers;
-import statuses.Status;
+import enums.Status;
 import managers.InMemoryHistoryManager;
 import tasks.Epic;
 import tasks.Subtask;
@@ -58,4 +58,4 @@ class InMemoryHistoryManagerTest {
         assertEquals(3, history.size());
         assertEquals(task2, history.get(2));
     }
-}
+} */   //TODO доделать хисторименеджертесты

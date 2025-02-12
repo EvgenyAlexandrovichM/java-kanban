@@ -1,9 +1,8 @@
 import managers.Managers;
-import statuses.Status;
+import enums.Status;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
-import tasks.Epic;
 import managers.TaskManager;
 
 public class Main {
