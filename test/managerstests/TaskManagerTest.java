@@ -31,8 +31,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     protected Epic addEpic() {
-        return new Epic("Test epic name", "Test epic description", Status.NEW, LocalDateTime.now(),
-                Duration.ofMinutes(30));
+        return new Epic("Test epic name", "Test epic description");
     }
 
     protected Subtask addSubtask(Epic epic) {
@@ -144,8 +143,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     public void shouldGetAllEpics() {
         Epic epic = addEpic();
-        Epic epic2 = new Epic("Test epic2 name", "Test epic2 description", Status.NEW, LocalDateTime.now(),
-                Duration.ofMinutes(30));
+        Epic epic2 = new Epic("Test epic2 name", "Test epic2 description");
         taskManager.addEpic(epic);
         taskManager.addEpic(epic2);
         List<Epic> epics = taskManager.getEpics();
@@ -208,8 +206,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     public void shouldRemoveAllEpics() {
         Epic epic = addEpic();
-        Epic epic2 = new Epic("Test epic2 name", "Test epic2 description", Status.NEW, LocalDateTime.now(),
-                Duration.ofMinutes(30));
+        Epic epic2 = new Epic("Test epic2 name", "Test epic2 description");
         Subtask subtask = addSubtask(epic);
         taskManager.addSubtask(subtask);
         taskManager.addEpic(epic);

@@ -41,10 +41,7 @@ class InMemoryHistoryManagerTest {
     }
 
     private Epic addEpic() {
-        Epic epic = new Epic("Epic test", "Test epic description",
-                Status.NEW,
-                LocalDateTime.now(),
-                Duration.ofMinutes(30));
+        Epic epic = new Epic("Epic test", "Test epic description");
         int epicId = setId();
         epic.setId(epicId);
         return epic;

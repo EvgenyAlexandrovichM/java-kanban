@@ -84,10 +84,10 @@ public class InMemoryTaskManager implements TaskManager {
             subtasks.put(subtask.getId(), subtask);
             Epic epic = epics.get(epicId);
             updateEpicStatus(epic);
-            // здесь по логике тоже нужно обновлять время эпика updateTimeEpic(epic);
+            updateTimeEpic(epic);
             prioritizedTasks.removeIf(t -> t.getId() == subtaskId);
+            addPrioritizedTask(subtask);
         }
-        addPrioritizedTask(subtask);
     }
 
     @Override
@@ -278,10 +278,14 @@ public class InMemoryTaskManager implements TaskManager {
 
         for (Subtask subtask : subtasks) {
             if (subtask.getStartTime() != null) {
-                if (startTime != null && subtask.getStartTime().isBefore(startTime)) {
+                if (startTime == null) {
+                    startTime = subtask.getStartTime();
+                } else if (subtask.getStartTime().isBefore(startTime)) {
                     startTime = subtask.getStartTime();
                 }
-                if (endTime != null && subtask.getEndTime().isAfter(endTime)) {
+                if (endTime == null) {
+                    endTime = subtask.getEndTime();
+                } else if (subtask.getEndTime().isAfter(endTime)) {
                     endTime = subtask.getEndTime();
                 }
                 totalDuration = totalDuration.plus(subtask.getDuration());
@@ -298,11 +302,17 @@ public class InMemoryTaskManager implements TaskManager {
         } else if (task.getType().equals(TaskType.EPIC)) {
             Epic epic = (Epic) task;
             epics.put(epic.getId(), epic);
+            updateTimeEpic(epic);
+            updateEpicStatus(epic);
         } else if (task.getType().equals(TaskType.SUBTASK)) {
             Subtask subtask = (Subtask) task;
             subtasks.put(subtask.getId(), subtask);
             Epic epic = epics.get(subtask.getEpicId());
             epic.addSubtask(subtask.getId());
+            if (epic != null) {
+                updateTimeEpic(epic);
+                updateEpicStatus(epic);
+            }
         }
     }
 

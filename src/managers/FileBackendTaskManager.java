@@ -41,12 +41,15 @@ public class FileBackendTaskManager extends InMemoryTaskManager {
     }
 
     private static String toString(Task task) {
-        String startTimeString;
+        /* String startTimeString;
         if (task.getStartTime() != null) {
             startTimeString = task.getStartTime().toString();
         } else {
             startTimeString = "null";
-        }
+        } */
+        String startTimeString = (task.getStartTime() != null) ? task.getStartTime().toString() : "null";
+        String endTimeString = (task.getEndTime() != null) ? task.getEndTime().toString() : "null";
+        String durationString = (task.getDuration() != null) ? task.getDuration().toString() : "null";
         String[] toJoin = {
                 Integer.toString(task.getId()),
                 task.getType().toString(),
@@ -54,7 +57,7 @@ public class FileBackendTaskManager extends InMemoryTaskManager {
                 task.getStatus().toString(),
                 task.getDescription(),
                 startTimeString,
-                task.getDuration().toString()
+                durationString
         };
         return String.join(",", toJoin);
     }
@@ -81,7 +84,7 @@ public class FileBackendTaskManager extends InMemoryTaskManager {
                 return new Task(name, description, id, status, startTime, duration);
 
             } else if (type.equals(TaskType.EPIC)) {
-                return new Epic(name, description, id, status, startTime, duration);
+                return new Epic(name, description, id, status);
 
             } else {
                 int epicId = Integer.parseInt(parts[7]);

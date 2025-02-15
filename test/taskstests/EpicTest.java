@@ -1,5 +1,6 @@
 package taskstests;
 
+import enums.Status;
 import tasks.Epic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,8 +13,8 @@ class EpicTest {
 
     @BeforeEach
     void setUp() {
-        epic1 = new Epic("Сделать дипломную работу", "Нужно успеть за месяц", 3);
-        epic2 = new Epic("Сделать тз", "Сегодня крайний день", 3);
+        epic1 = new Epic("Сделать дипломную работу", "Нужно успеть за месяц", 3, Status.NEW);
+        epic2 = new Epic("Сделать тз", "Сегодня крайний день", 3, Status.NEW);
     }
 
     @Test
