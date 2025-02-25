@@ -1,6 +1,7 @@
 package managerstests;
 
 import enums.Status;
+import exceptions.NotFoundException;
 import managers.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -170,7 +171,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Task task = addTask();
         taskManager.addTask(task);
         taskManager.removeTaskById(task.getId());
-        assertNull(taskManager.getTasksById(task.getId()));
+        assertThrows(NotFoundException.class, () -> taskManager.getTasksById(task.getId()));
     }
 
     @Test
@@ -178,7 +179,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = addEpic();
         taskManager.addEpic(epic);
         taskManager.removeEpicById(epic.getId());
-        assertNull(taskManager.getEpicsById(epic.getId()));
+        assertThrows(NotFoundException.class, () -> taskManager.getEpicsById(epic.getId()));
     }
 
     @Test
@@ -188,7 +189,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Subtask subtask = addSubtask(epic);
         taskManager.addSubtask(subtask);
         taskManager.removeSubtaskById(subtask.getId());
-        assertNull(taskManager.getSubtasksById(subtask.getId()));
+        assertThrows(NotFoundException.class, () -> taskManager.getSubtasksById(subtask.getId()));
     }
 
     @Test
