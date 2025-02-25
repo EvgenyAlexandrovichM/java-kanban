@@ -3,6 +3,7 @@ package managers;
 import enums.Status;
 import enums.TaskType;
 import exceptions.ManagerValidateException;
+import exceptions.NotFoundException;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
@@ -95,6 +96,8 @@ public class InMemoryTaskManager implements TaskManager {
         Task task = tasks.get(taskId);
         if (task != null) {
             historyManager.addTask(task);
+        } else {
+            throw new NotFoundException("Задача с ID " + taskId + " не найдена.");
         }
         return tasks.get(taskId);
     }
@@ -104,6 +107,8 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epics.get(epicId);
         if (epic != null) {
             historyManager.addTask(epic);
+        } else {
+            throw new NotFoundException("Эпик с ID " + epicId + " не найден.");
         }
         return epics.get(epicId);
     }
@@ -113,6 +118,8 @@ public class InMemoryTaskManager implements TaskManager {
         Subtask subtask = subtasks.get(subtaskId);
         if (subtask != null) {
             historyManager.addTask(subtask);
+        } else {
+            throw new NotFoundException("Подзадача с ID " + subtaskId + " не найдена.");
         }
         return subtasks.get(subtaskId);
     }
@@ -320,7 +327,7 @@ public class InMemoryTaskManager implements TaskManager {
         return prioritizedTasks.stream().toList();
     }
 
-    private boolean isValidate(Task task) {
+    private boolean isIntersect(Task task) {
         return prioritizedTasks.stream()
                 .anyMatch(t -> t.getStartTime().isBefore(task.getEndTime())
                         && task.getStartTime().isBefore(t.getEndTime()));
@@ -330,7 +337,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (task.getStartTime() == null) {
             return;
         }
-        if (isValidate(task)) {
+        if (isIntersect(task)) {
             throw new ManagerValidateException("Задача № " + task.getId() + " пересекается с другими задачами");
         }
         prioritizedTasks.add(task);
