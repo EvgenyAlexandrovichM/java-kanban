@@ -1,5 +1,6 @@
 package server.handlers;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import exceptions.NotFoundException;
@@ -10,6 +11,13 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 public abstract class BaseHttpHandler implements HttpHandler {
+
+    protected Gson gson;
+
+    public BaseHttpHandler(Gson gson) {
+        this.gson = gson;
+    }
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         try {
@@ -50,6 +58,8 @@ public abstract class BaseHttpHandler implements HttpHandler {
         exchange.sendResponseHeaders(statusCode, resp.length);
         try (OutputStream outputStream = exchange.getResponseBody()) {
             outputStream.write(resp);
+        } finally {
+            exchange.close();
         }
     }
 
@@ -58,13 +68,8 @@ public abstract class BaseHttpHandler implements HttpHandler {
         sendText(exchange, response, 404);
     }
 
-    protected void sendHasIntersections(HttpExchange exchange) throws IOException { // я если правильно понимаю, то мне
-        // нужно добавить метод boolean doesIntersect() в TaskManager,
-        // чтобы у меня приложение в целом проверяло наличие пересечений,иначе я не очень понимаю как вообще пересечения проверять,
-        // потому что пока у меня в реализации подобного нет, я что-то в прошлых тз пропустил?)))
+    protected void sendHasIntersections(HttpExchange exchange) throws IOException {
         String response = "Задача пересекается с существующими";
         sendText(exchange, response, 406);
-
-
     }
 }

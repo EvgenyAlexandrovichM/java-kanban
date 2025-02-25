@@ -29,11 +29,12 @@ public abstract class HttpTaskServerTestBase {
     @BeforeEach
     public void setUp() throws IOException {
         taskManager = new InMemoryTaskManager();
-        taskServer = new HttpTaskServer(taskManager, 8080);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Duration.class, new DurationTypeAdapter());
         gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter());
         gson = gsonBuilder.create();
+
+        taskServer = new HttpTaskServer(taskManager, 8080, gson);
         client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(30)).build();
         baseUri = URI.create("http://localhost:8080");
 

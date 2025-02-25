@@ -2,6 +2,8 @@ package server.handlers;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import exceptions.ManagerSaveException;
+import exceptions.ManagerValidateException;
 import exceptions.NotFoundException;
 import managers.TaskManager;
 import tasks.Epic;
@@ -12,11 +14,11 @@ import java.util.List;
 public class EpicsHandler extends BaseHttpHandler {
 
     private TaskManager taskManager;
-    private Gson gson;
 
-    public EpicsHandler(TaskManager taskManager) {
+
+    public EpicsHandler(TaskManager taskManager, Gson gson) {
+        super(gson);
         this.taskManager = taskManager;
-        this.gson = new Gson();
     }
 
     @Override
@@ -72,28 +74,35 @@ public class EpicsHandler extends BaseHttpHandler {
     }
 
     private void getEpicsById(HttpExchange exchange, int epicId) throws IOException {
-        try {
-            Epic epic = taskManager.getEpicsById(epicId);
-            String response = gson.toJson(epic);
-            sendText(exchange, response, 200);
-        } catch (NotFoundException e) {
-            sendNotFound(exchange);
-        }
+        Epic epic = taskManager.getEpicsById(epicId);
+        String response = gson.toJson(epic);
+        sendText(exchange, response, 200);
     }
 
     private void addEpic(HttpExchange exchange) throws IOException {
-        String body = readText(exchange);
-        Epic epic = gson.fromJson(body, Epic.class);
-        taskManager.addEpic(epic);
-        sendText(exchange, "Задача добавлена", 201);
+        try {
+            String body = readText(exchange);
+            Epic epic = gson.fromJson(body, Epic.class);
+            taskManager.addEpic(epic);
+            int id = epic.getId();
+            String response = String.valueOf(id);
+            sendText(exchange, "Задача добавлена " + response, 201);
+        } catch (ManagerValidateException e) {
+            sendHasIntersections(exchange);
+        }
     }
 
     private void updateEpic(HttpExchange exchange, int epicId) throws IOException {
-        String body = readText(exchange);
-        Epic epic = gson.fromJson(body, Epic.class);
-        epic.setId(epicId);
-        taskManager.updateEpic(epic);
-        sendText(exchange, "Задача обновлена", 201);
+        try {
+            String body = readText(exchange);
+            Epic epic = gson.fromJson(body, Epic.class);
+            epic.setId(epicId);
+            String response = String.valueOf(epicId);
+            taskManager.updateEpic(epic);
+            sendText(exchange, "Задача обновлена " + response, 201);
+        } catch (ManagerValidateException e) {
+            sendHasIntersections(exchange);
+        }
     }
 
     private void removeEpic(HttpExchange exchange) throws IOException {

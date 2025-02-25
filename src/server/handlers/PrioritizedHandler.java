@@ -11,11 +11,10 @@ import java.util.List;
 
 public class PrioritizedHandler extends BaseHttpHandler {
     private InMemoryTaskManager inMemoryTaskManager;
-    private Gson gson;
 
-    public PrioritizedHandler(InMemoryTaskManager inMemoryTaskManager) {
+    public PrioritizedHandler(InMemoryTaskManager inMemoryTaskManager, Gson gson) {
+        super(gson);
         this.inMemoryTaskManager = inMemoryTaskManager;
-        this.gson = new Gson();
     }
 
     @Override

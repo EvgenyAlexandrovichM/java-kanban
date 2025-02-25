@@ -2,6 +2,7 @@ package server.handlers;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import exceptions.ManagerSaveException;
 import exceptions.NotFoundException;
 import managers.TaskManager;
 import tasks.Task;
@@ -11,11 +12,10 @@ import java.util.List;
 
 public class TasksHandler extends BaseHttpHandler {
     private TaskManager taskManager;
-    private Gson gson;
 
-    public TasksHandler(TaskManager taskManager) {
+    public TasksHandler(TaskManager taskManager, Gson gson) {
+        super(gson);
         this.taskManager = taskManager;
-        this.gson = new Gson();
     }
 
     @Override
@@ -71,28 +71,36 @@ public class TasksHandler extends BaseHttpHandler {
     }
 
     private void getTasksById(HttpExchange exchange, int taskId) throws IOException {
-        try {
-            Task task = taskManager.getTasksById(taskId);
-            String response = gson.toJson(task);
-            sendText(exchange, response, 200);
-        } catch (NotFoundException e) {
-            sendNotFound(exchange);
-        }
+        Task task = taskManager.getTasksById(taskId);
+        String response = gson.toJson(task);
+        sendText(exchange, response, 200);
+
     }
 
     private void addTask(HttpExchange exchange) throws IOException {
-        String body = readText(exchange);
-        Task task = gson.fromJson(body, Task.class);
-        taskManager.addTask(task);
-        sendText(exchange, "Задача добавлена", 201);
+        try {
+            String body = readText(exchange);
+            Task task = gson.fromJson(body, Task.class);
+            int id = task.getId();
+            String response = String.valueOf(id);
+            taskManager.addTask(task);
+            sendText(exchange, "Задача добавлена " + response, 201);
+        } catch (ManagerSaveException e) {
+            sendHasIntersections(exchange);
+        }
     }
 
     private void updateTask(HttpExchange exchange, int taskId) throws IOException {
-        String body = readText(exchange);
-        Task task = gson.fromJson(body, Task.class);
-        task.setId(taskId);
-        taskManager.updateTask(task); // не очень понимаю, у нас сам метод просто обновляет запись о задаче, мне тут видится какая-то проблема, но я пока не могу её сформулировать))
-        sendText(exchange, "Задача обновлена", 201);
+        try {
+            String body = readText(exchange);
+            Task task = gson.fromJson(body, Task.class);
+            task.setId(taskId);
+            String response = String.valueOf(taskId);
+            taskManager.updateTask(task);
+            sendText(exchange, "Задача обновлена " + response, 201);
+        } catch (ManagerSaveException e) {
+            sendHasIntersections(exchange);
+        }
     }
 
     private void removeTasks(HttpExchange exchange) throws IOException {

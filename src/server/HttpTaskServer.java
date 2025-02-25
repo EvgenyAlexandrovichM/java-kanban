@@ -25,24 +25,21 @@ public class HttpTaskServer {
     private Gson gson;
 
     public HttpTaskServer() throws IOException {
-        HistoryManager historyManager = Managers.getDefaultHistory();
-        this.taskManager = Managers.getDefault();
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Duration.class, new DurationTypeAdapter());
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter());
-        gson = gsonBuilder.create();
-        httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
+        this(Managers.getDefault(), PORT, createGson());
+    }
+
+    public HttpTaskServer(TaskManager taskManager, int port, Gson gson) throws IOException {
+        this.taskManager = taskManager;
+        this.gson = gson;
+        this.httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
         setupContex();
     }
 
-    public HttpTaskServer(TaskManager taskManager, int port) throws IOException {
-        this.taskManager = taskManager;
+    private static Gson createGson() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Duration.class, new DurationTypeAdapter());
         gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter());
-        gson = gsonBuilder.create();
-        httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
-        setupContex();
+        return gsonBuilder.create();
     }
 
     public static void main(String[] args) throws IOException {
@@ -61,11 +58,11 @@ public class HttpTaskServer {
     }
 
     private void setupContex() {
-        httpServer.createContext("/tasks", new TasksHandler(taskManager));
-        httpServer.createContext("/subtasks", new SubtasksHandler(taskManager));
-        httpServer.createContext("/epics", new EpicsHandler(taskManager));
-        httpServer.createContext("/history", new HistoryHandler(taskManager));
-        httpServer.createContext("/prioritized", new PrioritizedHandler(inMemoryTaskManager));
+        httpServer.createContext("/tasks", new TasksHandler(taskManager, gson));
+        httpServer.createContext("/subtasks", new SubtasksHandler(taskManager, gson));
+        httpServer.createContext("/epics", new EpicsHandler(taskManager, gson));
+        httpServer.createContext("/history", new HistoryHandler(taskManager, gson));
+        httpServer.createContext("/prioritized", new PrioritizedHandler(inMemoryTaskManager, gson));
     }
 }
 

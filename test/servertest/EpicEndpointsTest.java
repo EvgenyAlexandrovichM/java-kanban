@@ -16,7 +16,7 @@ public class EpicEndpointsTest extends HttpTaskServerTestBase {
     protected Epic addEpic() {
         return new Epic("Test epic name", "Test epic description");
     }
-} //TODO падают тесты, доделать
+
 
      @Test
     void shouldReturnEmptyListIfNoEpics() throws IOException, InterruptedException {
@@ -27,11 +27,11 @@ public class EpicEndpointsTest extends HttpTaskServerTestBase {
 
     @Test
     void shouldAddEpic() throws IOException, InterruptedException {
-        Task task = addEpic();
-        String epicJson = gson.toJson(task);
+        Epic epic = addEpic();
+        String epicJson = gson.toJson(epic);
 
-        HttpResponse<String> response = sendRequest("/tasks", "POST", epicJson);
-        assertEquals(200, response.statusCode());
+        HttpResponse<String> response = sendRequest("/epics", "POST", epicJson);
+        assertEquals(201, response.statusCode());
         List<Epic> epicsFromManager = taskManager.getEpics();
         assertNotNull(epicsFromManager);
         assertEquals(1, epicsFromManager.size());
@@ -48,4 +48,4 @@ public class EpicEndpointsTest extends HttpTaskServerTestBase {
         assertEquals(200, response.statusCode());
         assertEquals(0, taskManager.getEpics().size());
     }
-} */
+} */  //TODO падают тесты, доделать

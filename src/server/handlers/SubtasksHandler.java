@@ -2,6 +2,7 @@ package server.handlers;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import exceptions.ManagerValidateException;
 import exceptions.NotFoundException;
 import managers.TaskManager;
 import tasks.Subtask;
@@ -11,11 +12,11 @@ import java.util.List;
 
 public class SubtasksHandler extends BaseHttpHandler {
     private TaskManager taskManager;
-    private Gson gson;
 
-    public SubtasksHandler(TaskManager taskManager) {
+
+    public SubtasksHandler(TaskManager taskManager, Gson gson) {
+        super(gson);
         this.taskManager = taskManager;
-        this.gson = new Gson();
     }
 
     @Override
@@ -71,31 +72,38 @@ public class SubtasksHandler extends BaseHttpHandler {
     }
 
     private void getSubtasksById(HttpExchange exchange, int subtaskId) throws IOException {
-        try {
-            Subtask subtask = taskManager.getSubtasksById(subtaskId);
-            String response = gson.toJson(subtask);
-            sendText(exchange, response, 200);
-        } catch (NotFoundException e) {
-            sendNotFound(exchange);
-        }
+        Subtask subtask = taskManager.getSubtasksById(subtaskId);
+        String response = gson.toJson(subtask);
+        sendText(exchange, response, 200);
     }
 
     private void addSubtask(HttpExchange exchange) throws IOException {
-        String body = readText(exchange);
-        Subtask subtask = gson.fromJson(body, Subtask.class);
-        if (subtask.getEpicId() == 0) {
-            sendNotFound(exchange);
+        try {
+            String body = readText(exchange);
+            Subtask subtask = gson.fromJson(body, Subtask.class);
+            if (subtask.getEpicId() == 0) {
+                sendNotFound(exchange);
+            }
+            int id = subtask.getId();
+            String response = String.valueOf(id);
+            taskManager.addSubtask(subtask);
+            sendText(exchange, "Задача добавлена " + response, 201);
+        } catch (ManagerValidateException e) {
+            sendHasIntersections(exchange);
         }
-        taskManager.addSubtask(subtask);
-        sendText(exchange, "Задача добавлена", 201);
     }
 
     private void updateSubtask(HttpExchange exchange, int subtakId) throws IOException {
-        String body = readText(exchange);
-        Subtask subtask = gson.fromJson(body, Subtask.class);
-        subtask.setId(subtakId);
-        taskManager.updateSubtask(subtask);
-        sendText(exchange, "Задача обновлена", 201);
+        try {
+            String body = readText(exchange);
+            Subtask subtask = gson.fromJson(body, Subtask.class);
+            subtask.setId(subtakId);
+            String response = String.valueOf(subtakId);
+            taskManager.updateSubtask(subtask);
+            sendText(exchange, "Задача обновлена " + response, 201);
+        } catch (ManagerValidateException e) {
+            sendHasIntersections(exchange);
+        }
     }
 
     private void removeSubtasks(HttpExchange exchange) throws IOException {
