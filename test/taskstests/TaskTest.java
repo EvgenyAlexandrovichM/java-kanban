@@ -1,6 +1,6 @@
 package taskstests;
 
-import statuses.Status;
+import enums.Status;
 import tasks.Task;
 import org.junit.jupiter.api.Test;
 

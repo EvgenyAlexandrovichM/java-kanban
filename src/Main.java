@@ -1,9 +1,8 @@
 import managers.Managers;
-import statuses.Status;
+import enums.Status;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
-import tasks.Epic;
 import managers.TaskManager;
 
 public class Main {
@@ -54,7 +53,7 @@ public class Main {
         taskManager.removeEpicById(doHomeWork1.getId());
         System.out.println(taskManager.getEpics());
         System.out.println(taskManager.getEpics());
-        Epic epic2 = new Epic("Сделать тз", "Сегодня крайний день", doHomeWork.getId());
+        Epic epic2 = new Epic("Сделать тз", "Сегодня крайний день", doHomeWork.getId(), Status.NEW);
         taskManager.updateEpic(epic2);
         System.out.println("-".repeat(50));
         System.out.println(taskManager.getEpics());

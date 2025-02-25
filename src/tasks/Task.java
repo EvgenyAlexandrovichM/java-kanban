@@ -1,8 +1,10 @@
 package tasks;
 
-import statuses.Status;
-import statuses.TaskType;
+import enums.Status;
+import enums.TaskType;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -10,18 +12,36 @@ public class Task {
     private String description;
     private int id;
     private Status status;
+    private Duration duration;
+    private LocalDateTime startTime;
 
+    public Task(String name, String description, int id, Status status, LocalDateTime startTime, Duration duration) {
+        this.name = name;
+        this.startTime = startTime;
+        this.duration = duration;
+        this.status = status;
+        this.id = id;
+        this.description = description;
+    }
 
-    public Task(String name, String description, int id, Status status) {
+    public Task(String name, String description, Status status, LocalDateTime startTime, Duration duration) {
         this.name = name;
         this.description = description;
-        this.id = id;
         this.status = status;
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
     public Task(String name, String description, Status status) {
         this.name = name;
         this.description = description;
+        this.status = status;
+    }
+
+    public Task(String name, String description, int id, Status status) {
+        this.name = name;
+        this.description = description;
+        this.id = id;
         this.status = status;
     }
 
@@ -61,9 +81,39 @@ public class Task {
         return TaskType.TASK;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime == null) {
+            return null; //TODO реализовать через Optional, чтобы не возвращать null, а то моветон какой-то )
+        }
+        return startTime.plus(duration);
+    }
+
     @Override
     public String toString() {
-        return id + "," + getType() + "," + name + "," + status + "," + description + ",";
+        return "Task{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", id=" + id +
+                ", status=" + status +
+                ", duration=" + duration +
+                ", startTime=" + startTime +
+                '}';
     }
 
     @Override
