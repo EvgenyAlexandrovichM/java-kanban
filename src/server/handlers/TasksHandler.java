@@ -3,6 +3,7 @@ package server.handlers;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import exceptions.NotFoundException;
+import exceptions.ManagerValidateException;
 import managers.TaskManager;
 import tasks.Task;
 
@@ -84,7 +85,7 @@ public class TasksHandler extends BaseHttpHandler {
             String response = String.valueOf(id);
             taskManager.addTask(task);
             sendText(exchange, "Задача добавлена " + response, 201);
-        } catch (ManagerSaveException e) {
+        } catch (ManagerValidateException e) {
             sendHasIntersections(exchange);
         }
     }
@@ -97,7 +98,7 @@ public class TasksHandler extends BaseHttpHandler {
             String response = String.valueOf(taskId);
             taskManager.updateTask(task);
             sendText(exchange, "Задача обновлена " + response, 201);
-        } catch (ManagerSaveException e) {
+        } catch (ManagerValidateException e) {
             sendHasIntersections(exchange);
         }
     }
